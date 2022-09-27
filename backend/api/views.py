@@ -1,6 +1,6 @@
 # from django.shortcuts import render
 from rest_framework.generics import ListCreateAPIView, RetrieveAPIView, DestroyAPIView, UpdateAPIView, RetrieveUpdateDestroyAPIView
-from rest_framework.permissions import IsAdminUser
+from .permissions import IsSuperUserOrStaffReadOnly, IsAuthorOrReadOnly, IsStaffOrReadOnly
 from blog.models import Article
 from .serializers import ArticleSerializer, UserSerializer
 from django.contrib.auth.models import User
@@ -25,7 +25,7 @@ class ArticleList(ListCreateAPIView):
 class ArticleDetail(RetrieveUpdateDestroyAPIView):
     queryset = Article.objects.all()
     serializer_class = ArticleSerializer
-    lookup_field = "slug"
+    permission_classes = (IsStaffOrReadOnly, IsAuthorOrReadOnly)
 
 
 class ArticleGet(RetrieveAPIView):
@@ -36,38 +36,40 @@ class ArticleGet(RetrieveAPIView):
 class ArticleDelete(DestroyAPIView):
     queryset = Article.objects.all()
     serializer_class = ArticleSerializer
+    permission_classes = (IsStaffOrReadOnly, IsAuthorOrReadOnly)
 
 
 class ArticleUpdate(UpdateAPIView):
     queryset = Article.objects.all()
     serializer_class = ArticleSerializer
+    permission_classes = (IsStaffOrReadOnly, IsAuthorOrReadOnly)
 
 
 class UserList(ListCreateAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    permission_classes = {IsAdminUser, }
+    permission_classes = {IsSuperUserOrStaffReadOnly, }
 
 
 class UserDetail(RetrieveUpdateDestroyAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    permission_classes = {IsAdminUser, }
+    permission_classes = {IsSuperUserOrStaffReadOnly, }
 
 
 class UserGet(RetrieveAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    permission_classes = {IsAdminUser, }
+    permission_classes = {IsSuperUserOrStaffReadOnly, }
 
 
 class UserDelete(DestroyAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    permission_classes = {IsAdminUser, }
+    permission_classes = {IsSuperUserOrStaffReadOnly, }
 
 
 class UserUpdate(UpdateAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    permission_classes = {IsAdminUser, }
+    permission_classes = {IsSuperUserOrStaffReadOnly, }

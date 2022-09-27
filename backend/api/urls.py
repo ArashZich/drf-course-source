@@ -6,7 +6,7 @@ app_name = "api"
 
 urlpatterns = [
     path("", ArticleList.as_view(), name='list'),
-    path("<slug:slug>", ArticleDetail.as_view(), name='detail'),
+    path("<int:pk>", ArticleDetail.as_view(), name='detail'),
     path("<int:pk>/get", ArticleGet.as_view(), name='detail_get'),
     path("<int:pk>/delete", ArticleDelete.as_view(), name='detail_delete'),
     path("<int:pk>/update", ArticleUpdate.as_view(), name='detail_update'),
