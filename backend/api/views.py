@@ -2,11 +2,12 @@
 # from rest_framework.views import APIView
 # from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
+from rest_framework.generics import RetrieveAPIView
 # from rest_framework.generics import ListCreateAPIView, RetrieveAPIView, DestroyAPIView, UpdateAPIView, RetrieveUpdateDestroyAPIView
 # from rest_framework.permissions import IsAuthenticated
 from .permissions import IsSuperUserOrStaffReadOnly, IsAuthorOrReadOnly, IsStaffOrReadOnly
 from blog.models import Article
-from .serializers import ArticleSerializer, UserSerializer
+from .serializers import ArticleSerializer, UserSerializer, AuthorSerializer
 # from django.contrib.auth.models import User
 from django.contrib.auth import get_user_model
 
@@ -62,7 +63,13 @@ class ArticleUpdate(UpdateAPIView):
 class ArticleViewSet(ModelViewSet):
     queryset = Article.objects.all()
     serializer_class = ArticleSerializer
-    filterset_fields = ["status", "author__username"]
+    filterset_fields = ["status", "author"]
+    # filterset_fields = ["status", "author__username"]
+    search_fields = ["title", "content", "author__username",
+                     "author__first_name", "author__last_name"]
+    ordering_fields = ["publish", "status"]
+    ordering = ["-publish"]
+
     # old filter
     # def get_queryset(self):
     #     queryset = Article.objects.all()
@@ -137,3 +144,9 @@ class UserViewSet(ModelViewSet):
 #     def delete(self, request):
 #         request.auth.delete()
 #         return Response(status=204)
+
+
+class AuthorRetrieve(RetrieveAPIView):
+    # queryset = User.objects.all()
+    queryset = get_user_model().objects.filter(is_staff=True)
+    serializer_class = AuthorSerializer

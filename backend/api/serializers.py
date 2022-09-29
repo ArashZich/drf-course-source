@@ -4,7 +4,18 @@ from blog.models import Article
 from django.contrib.auth import get_user_model
 
 
+class AuthorSerializer(serializers.ModelSerializer):
+    class Meta:
+        # model = User
+        model = get_user_model()
+        fields = ["id", "username", "first_name", "last_name"]
+
+
 class ArticleSerializer(serializers.ModelSerializer):
+    author = AuthorSerializer()
+    # author = serializers.HyperlinkedModelSerializer(
+    #     view_name="api:authors-detail")
+
     class Meta:
         model = Article
         # fields = (
@@ -17,6 +28,13 @@ class ArticleSerializer(serializers.ModelSerializer):
         # ) //or
         # exclude = ("created", "updated")
         fields = "__all__"  # all fields
+
+    def validate_title(self, value):
+        filter_list = ["javascript", "laravel", "PHP"]
+        for i in filter_list:
+            if i in value:
+                raise serializers.ValidationError(
+                    "Don't use bad world!: {}".format(i))
 
 
 class UserSerializer(serializers.ModelSerializer):
