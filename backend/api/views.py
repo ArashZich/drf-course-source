@@ -2,12 +2,11 @@
 # from rest_framework.views import APIView
 # from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
-from rest_framework.generics import RetrieveAPIView
 # from rest_framework.generics import ListCreateAPIView, RetrieveAPIView, DestroyAPIView, UpdateAPIView, RetrieveUpdateDestroyAPIView
 # from rest_framework.permissions import IsAuthenticated
 from .permissions import IsSuperUserOrStaffReadOnly, IsAuthorOrReadOnly, IsStaffOrReadOnly
 from blog.models import Article
-from .serializers import ArticleSerializer, UserSerializer, AuthorSerializer
+from .serializers import ArticleSerializer, UserSerializer
 # from django.contrib.auth.models import User
 from django.contrib.auth import get_user_model
 
@@ -145,8 +144,3 @@ class UserViewSet(ModelViewSet):
 #         request.auth.delete()
 #         return Response(status=204)
 
-
-class AuthorRetrieve(RetrieveAPIView):
-    # queryset = User.objects.all()
-    queryset = get_user_model().objects.filter(is_staff=True)
-    serializer_class = AuthorSerializer
