@@ -22,7 +22,7 @@ class IsAuthorOrReadOnly(BasePermission):
             return True
         return bool(
             # get access to superuser
-            request.user.is_authenticated and
+                request.user.is_authenticated and
             request.user.is_superuser or
             # get access to author of object
             obj.author == request.user)
